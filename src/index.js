@@ -19,31 +19,36 @@ const server = http.createServer(async (req, res) => {
 
     switch (req.url) {
         case "/":
-            const homeHtml = await fs.readFile("./src/views/home.html", { encoding: "utf-8" });
-            res.write(homeHtml);
+            res.write(await homeView());
             break;
         case "/cats/add-cat":
-            const addCatHtml = await fs.readFile("./src/views/addCat.html", { encoding: "utf-8" });
-            res.write(addCatHtml);
+            res.write(await addCatView());
             break;
         case "/cats/add-breed":
-            const addBreedHtml = await fs.readFile("./src/views/addBreed.html", { encoding: "utf-8" });
-            res.write(addBreedHtml);
+            res.write(await addBreedView());
             break;
     }
 
     res.end();
 })
 
-
-function readFile(path) {
-    return fs.readFile(path, { encoding: "utf-8" });
+async function read(path) {
+    const html = await fs.readFile(path, { encoding: "utf-8" });
+    return html;
 }
 
-async function homeView() {
+function homeView() {
+    const result = read("./src/views/home.html");
+    return result;
+}
 
-    const html = readFile("./src/views/home.html");
-    return html;
+function addCatView() {
+    const result = read("./src/views/addCat.html");
+    return result;
+}
+
+function addBreedView() {
+    return read("./src/views/addBreed.html");
 }
 
 server.listen(5000, () => console.log("Server is listening on http://localhost:5000"))
