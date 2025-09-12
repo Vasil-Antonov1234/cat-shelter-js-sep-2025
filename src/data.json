@@ -1,0 +1,39 @@
+{ "cats": [
+        {
+            "id": 1,
+            "imageUrl": "https://www.lifetimepetcover.co.uk/assets/uploads/Breed%20Pages/Bombay/Bombay---Introduction.jpg",
+            "name": "Pretty Kitty",
+            "breed": "Bombay Cat",
+            "description": "The Bombay cat is a medium-sized, stocky, and muscular breed known for its jet-black, glossy coat that resembles patent leather and its striking copper or gold-colored eyes."
+        },
+        {
+            "id": 2,
+            "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/8/81/Persialainen.jpg",
+            "name": "Roco",
+            "breed": "Persian Cat",
+            "description": "Persian cats are a medium-sized, heavily-boned breed known for their extremely long, thick, and glossy fur, short legs and neck, round head with a distinctive flat face and large round eyes, and small ears."
+        },
+        {
+            "id": 3,
+            "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJgz2DBsa1h4atT4Jrg-R3TtJZkDewqcShBxbqIFHg5KgRPYVPwWqn9LTy5qmHifbfGUHn",
+            "name": "Lisa",
+            "breed": "Siamese Cat",
+            "description": "Siamese cats are characterized by their striking colorpoint coats, which feature a pale body with darker points on their face, ears, paws, and tail, a trait caused by temperature-sensitive albinism."
+        },
+        {
+            "id": 4,
+            "imageUrl": "https://cdn.shopify.com/s/files/1/0765/3946/1913/files/bombay_cat_2.jpg?v=1736363698",
+            "name": "Garry",
+            "breed": "Bombay Cat",
+            "description": "The Bombay cat is a medium-sized, stocky, and muscular breed known for its jet-black, glossy coat that resembles patent leather and its striking copper or gold-colored eyes."
+        },
+        {
+            "name": "Grigor",
+            "description": "Such a nice cat!",
+            "imageUrl": "https://hips.hearstapps.com/hmg-prod/images/ginger-maine-coon-kitten-running-on-lawn-in-royalty-free-image-1719608142.jpg?crop=1xw:0.84415xh;0,0.185xh&resize=1200:*",
+            "breed": "Fluffy Cat",
+            "id": 5
+        }
+    ],
+    "breeds": []
+}

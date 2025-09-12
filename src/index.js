@@ -3,16 +3,23 @@ import http from "http";
 import fs from "fs/promises";
 
 const server = http.createServer(async (req, res) => {
+    let contentType = "text/html";
 
     if (req.url === "/content/styles/site.css") {
+        contentType = "text/css"
+
         res.writeHead(200, {
-            "content-type": "text/css"
+            "content-type": contentType
         })
 
         res.write(await css());
         res.end();
         return;
     }
+
+    res.writeHead(200, {
+        "content-type": contentType
+    })
 
 
     switch (req.url) {
