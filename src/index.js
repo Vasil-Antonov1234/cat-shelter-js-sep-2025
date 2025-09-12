@@ -26,6 +26,10 @@ const server = http.createServer(async (req, res) => {
             const addCatHtml = await fs.readFile("./src/views/addCat.html", { encoding: "utf-8" });
             res.write(addCatHtml);
             break;
+        case "/cats/add-breed":
+            const addBreedHtml = await fs.readFile("./src/views/addBreed.html", { encoding: "utf-8" });
+            res.write(addBreedHtml);
+            break;
     }
 
     res.end();
