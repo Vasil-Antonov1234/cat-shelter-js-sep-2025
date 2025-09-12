@@ -1,8 +1,6 @@
 import http from "http";
 
 import fs from "fs/promises";
-import siteCss from "./content/styles/site.css.js";
-// import homeHtml from "./views/home.html.js";
 
 const server = http.createServer(async (req, res) => {
 
@@ -11,7 +9,7 @@ const server = http.createServer(async (req, res) => {
             "content-type": "text/css"
         })
 
-        res.write(siteCss);
+        res.write(await css());
         res.end();
         return;
     }
@@ -33,22 +31,23 @@ const server = http.createServer(async (req, res) => {
 })
 
 async function read(path) {
-    const html = await fs.readFile(path, { encoding: "utf-8" });
-    return html;
+    return await fs.readFile(path, { encoding: "utf-8" });
 }
 
 function homeView() {
-    const result = read("./src/views/home.html");
-    return result;
+    return read("./src/views/home.html");
 }
 
 function addCatView() {
-    const result = read("./src/views/addCat.html");
-    return result;
+    return read("./src/views/addCat.html");
 }
 
 function addBreedView() {
     return read("./src/views/addBreed.html");
+}
+
+function css() {
+    return read("./src/content/styles/site.css");
 }
 
 server.listen(5000, () => console.log("Server is listening on http://localhost:5000"))
