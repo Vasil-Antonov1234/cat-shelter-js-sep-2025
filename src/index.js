@@ -2,10 +2,10 @@ import http from "http";
 
 import fs from "fs/promises";
 import siteCss from "./content/styles/site.css.js";
-import homeHtml from "./views/home.html.js";
+// import homeHtml from "./views/home.html.js";
 
-const server = http.createServer((req, res) => {
-    
+const server = http.createServer(async (req, res) => {
+
     if (req.url === "/content/styles/site.css") {
         res.writeHead(200, {
             "content-type": "text/css"
@@ -16,9 +16,15 @@ const server = http.createServer((req, res) => {
         return;
     }
 
-    
+
     switch (req.url) {
-        case "/": res.write(homeHtml);
+        case "/":
+            const homeHtml = await fs.readFile("./src/views/home.html", { encoding: "utf-8" });
+            res.write(homeHtml);
+            break;
+        case "/cats/add-cat":
+            const addCatHtml = await fs.readFile("./src/views/addCat.html", { encoding: "utf-8" });
+            res.write(addCatHtml);
             break;
     }
 
@@ -27,7 +33,7 @@ const server = http.createServer((req, res) => {
 
 
 function readFile(path) {
-    return fs.readFile(path, { encoding: "utf-8"});
+    return fs.readFile(path, { encoding: "utf-8" });
 }
 
 async function homeView() {
