@@ -1,9 +1,12 @@
 import http from "http";
 
 import fs from "fs/promises";
+import { dataService } from "./dataService.js";
 
 const server = http.createServer(async (req, res) => {
     let contentType = "text/html";
+
+    const data = await dataService.getCats();
 
     if (req.url === "/content/styles/site.css") {
         contentType = "text/css"
@@ -24,7 +27,7 @@ const server = http.createServer(async (req, res) => {
 
     switch (req.url) {
         case "/":
-            res.write(await homeView());
+            res.write(await homeView(data));
             break;
         case "/cats/add-cat":
             res.write(await addCatView());
@@ -41,8 +44,13 @@ async function read(path) {
     return await fs.readFile(path, { encoding: "utf-8" });
 }
 
-function homeView() {
-    return read("./src/views/home.html");
+async function homeView(data) {
+    const catsHtml = data.map((cat) => catTemplate(cat));
+    
+    const html = await read("./src/views/home.html");
+    const result = html.replaceAll("{{cats}}", catsHtml);
+
+    return result;
 }
 
 function addCatView() {
@@ -57,4 +65,20 @@ function css() {
     return read("./src/content/styles/site.css");
 }
 
-server.listen(5000, () => console.log("Server is listening on http://localhost:5000"))
+
+function catTemplate(cat) {
+    return `
+    <li>
+        <img src="${cat.imageUrl}">
+        <h3>${cat.name}</h3>
+        <p><span>Breed: </span>${cat.breed}</p>
+        <p><span>Description: </span>${cat.description}</p>
+        <ul class="buttons">
+            <li class="btn edit"><a href="">Change Info</a></li>
+            <li class="btn delete"><a href="">New Home</a></li>
+        </ul>
+    </li>
+    `
+}
+
+server.listen(5000, () => console.log("Server is listening on http://localhost:5000..."))
