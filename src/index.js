@@ -3,8 +3,36 @@ import http from "http";
 import fs from "fs/promises";
 import { dataService } from "./dataService.js";
 
+const cats = dataService.getCats();
+
 const server = http.createServer(async (req, res) => {
     let contentType = "text/html";
+
+    if (req.method === "POST") {
+        let urlData = "";
+        
+        req.on("data", (chunk) => {
+            urlData += chunk;
+        })
+
+        req.on("end", async () => {
+            const newCatData = new URLSearchParams(urlData);
+            const newCat = Object.fromEntries(newCatData.entries());
+
+            // cats.push(newCat);
+
+            await dataService.addCat(newCat);
+
+            res.writeHead(301, {
+                "location": "/"
+            });
+
+            res.end();
+        });
+
+        // res.end();
+        return;
+    }
     
     if (req.url === "/content/styles/site.css") {
         contentType = "text/css"
@@ -21,20 +49,6 @@ const server = http.createServer(async (req, res) => {
     res.writeHead(200, {
         "content-type": contentType
     })
-
-    if (req.method === "POST" && req.url === "/cats/add-cat") {
-        let urlData = "";
-        
-        req.on("data", (chunk) => {
-            urlData += chunk;
-        })
-
-        req.on("end", async () => {
-            const newCatData = new URLSearchParams(urlData);
-            const newCat = Object.fromEntries(newCatData.entries());
-            await dataService.addCat(newCat);
-        })
-    }
 
 
     switch (req.url) {
@@ -57,8 +71,8 @@ async function read(path) {
 }
 
 async function homeView() {
-    const data = await dataService.getCats();
-    const catsHtml = data.map((cat) => catTemplate(cat));
+    // const data = await dataService.getCats();
+    const catsHtml = cats.map((cat) => catTemplate(cat));
     
     const html = await read("./src/views/home.html");
     const result = html.replaceAll("{{cats}}", catsHtml);

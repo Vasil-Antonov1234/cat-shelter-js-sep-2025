@@ -3,7 +3,7 @@ import fs from "fs/promises";
 const dataJson = await fs.readFile("./src/data.json", { encoding: "utf-8" });
 const data = JSON.parse(dataJson);
 
-async function getCats() {
+function getCats() {
     return data.cats;
 }
 
