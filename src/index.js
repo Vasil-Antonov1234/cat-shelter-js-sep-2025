@@ -5,9 +5,7 @@ import { dataService } from "./dataService.js";
 
 const server = http.createServer(async (req, res) => {
     let contentType = "text/html";
-
-    const data = await dataService.getCats();
-
+    
     if (req.url === "/content/styles/site.css") {
         contentType = "text/css"
 
@@ -24,10 +22,24 @@ const server = http.createServer(async (req, res) => {
         "content-type": contentType
     })
 
+    if (req.method === "POST" && req.url === "/cats/add-cat") {
+        let urlData = "";
+        
+        req.on("data", (chunk) => {
+            urlData += chunk;
+        })
+
+        req.on("end", async () => {
+            const newCatData = new URLSearchParams(urlData);
+            const newCat = Object.fromEntries(newCatData.entries());
+            await dataService.addCat(newCat);
+        })
+    }
+
 
     switch (req.url) {
         case "/":
-            res.write(await homeView(data));
+            res.write(await homeView());
             break;
         case "/cats/add-cat":
             res.write(await addCatView());
@@ -44,7 +56,8 @@ async function read(path) {
     return await fs.readFile(path, { encoding: "utf-8" });
 }
 
-async function homeView(data) {
+async function homeView() {
+    const data = await dataService.getCats();
     const catsHtml = data.map((cat) => catTemplate(cat));
     
     const html = await read("./src/views/home.html");
