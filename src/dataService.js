@@ -10,7 +10,7 @@ function getCats() {
 async function addCat(newCat) {
     newCat.id = data.cats.length + 1;
     data.cats.push(newCat);
-    const dataStringified = JSON.stringify(data);
+    const dataStringified = JSON.stringify(data, null, 2);
     
     await fs.writeFile("./src/data.json", dataStringified, { encoding: "utf-8" });
 }

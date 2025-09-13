@@ -3,8 +3,6 @@ import http from "http";
 import fs from "fs/promises";
 import { dataService } from "./dataService.js";
 
-const cats = dataService.getCats();
-// const cats = [];
 
 const server = http.createServer(async (req, res) => {
     let contentType = "text/html";
@@ -36,7 +34,8 @@ const server = http.createServer(async (req, res) => {
         contentType = "text/css"
 
         res.writeHead(200, {
-            "content-type": contentType
+            "content-type": contentType,
+            "cache-control": "max-age=10"
         })
 
         res.write(await css());
@@ -71,6 +70,9 @@ async function read(path) {
 async function homeView() {
     
     let catsHtml = ""
+
+    const cats = await dataService.getCats();
+    // const cats = [];
 
     if (cats.length > 0) {
         catsHtml = cats.map((cat) => catTemplate(cat)).join("\n");
