@@ -4,6 +4,7 @@ import fs from "fs/promises";
 import { dataService } from "./dataService.js";
 
 const cats = dataService.getCats();
+// const cats = [];
 
 const server = http.createServer(async (req, res) => {
     let contentType = "text/html";
@@ -18,19 +19,16 @@ const server = http.createServer(async (req, res) => {
         req.on("end", async () => {
             const newCatData = new URLSearchParams(urlData);
             const newCat = Object.fromEntries(newCatData.entries());
-
-            // cats.push(newCat);
-
+           
             await dataService.addCat(newCat);
 
-            res.writeHead(301, {
+            res.writeHead(302, {
                 "location": "/"
             });
 
             res.end();
         });
 
-        // res.end();
         return;
     }
     
@@ -71,9 +69,15 @@ async function read(path) {
 }
 
 async function homeView() {
-    // const data = await dataService.getCats();
-    const catsHtml = cats.map((cat) => catTemplate(cat));
     
+    let catsHtml = ""
+
+    if (cats.length > 0) {
+        catsHtml = cats.map((cat) => catTemplate(cat)).join("\n");
+    } else {
+        catsHtml = "<h1>There are no cats yet</h1>";
+    }
+
     const html = await read("./src/views/home.html");
     const result = html.replaceAll("{{cats}}", catsHtml);
 
