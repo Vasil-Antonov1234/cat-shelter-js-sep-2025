@@ -93,14 +93,11 @@ const server = http.createServer(async (req, res) => {
     }
 
     if (req.url.startsWith("/search") && req.method === "GET") {
-
-        // const searchData = new URLSearchParams(urlData);
-        // const searchDataResult = searchData.get("input");
         const segments = req.url.split("=");
-        const searchParams = segments[1]; 
+        const searchParams = segments[1];
 
 
-        res.write(homeView(searchParams));
+        res.write(await homeView(searchParams));
     }
 
 
