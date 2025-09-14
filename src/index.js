@@ -123,11 +123,16 @@ function addBreedView() {
 
 async function editCatView(catId) {
     const cat = await dataService.getCatById(catId);
+    let breeds = await dataService.getBreeds();
+    breeds = breeds.filter((breed) => breed !== cat.breed);
+    const breedHtml = breeds.map((breed) => breedTemplate(breed)).join("\n");
     let html = await read("./src/views/editCat.html");
 
     html = html.replaceAll("{{name}}", cat.name);
     html = html.replaceAll("{{description}}", cat.description);
     html = html.replaceAll("{{imageUrl}}", cat.imageUrl);
+    html = html.replaceAll("{{breedHtml}}", breedHtml);
+    html = html.replaceAll("{{defaultOption}}", cat.breed);
 
     return html;
 }
