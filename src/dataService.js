@@ -10,12 +10,31 @@ function getCats() {
 async function addCat(newCat) {
     newCat.id = data.cats.length + 1;
     data.cats.push(newCat);
-    const dataStringified = JSON.stringify(data, null, 2);
     
-    await fs.writeFile("./src/data.json", dataStringified, { encoding: "utf-8" });
+    await saveData();
+}
+
+async function getCatById(catId) {
+    const cat = data.cats.find((cat) => cat.id === catId);
+    return cat;
+}
+
+async function updateCat(catId, catData) {
+    data.cats = data.cats.map((cat) => cat.id === catId ? {id: catId, ...catData} : cat);
+    
+    await saveData()
 }
 
 export const dataService = {
     getCats,
-    addCat
+    getCatById,
+    addCat,
+    updateCat
+}
+
+
+async function saveData() {
+    const dataStringified = JSON.stringify(data, null, 2);
+    
+    await fs.writeFile("./src/data.json", dataStringified, { encoding: "utf-8" });
 }

@@ -9,16 +9,24 @@ const server = http.createServer(async (req, res) => {
 
     if (req.method === "POST") {
         let urlData = "";
-        
+
         req.on("data", (chunk) => {
             urlData += chunk;
         })
 
         req.on("end", async () => {
             const newCatData = new URLSearchParams(urlData);
-            const newCat = Object.fromEntries(newCatData.entries());
-           
-            await dataService.addCat(newCat);
+            const catDataResult = Object.fromEntries(newCatData.entries());
+
+            if (req.url === "/cats/add-cat") {
+                await dataService.addCat(catDataResult);
+            } else if (req.url.startsWith("/cats/edit-cat/")) {
+                const segments = req.url.split("/");
+                const catId = Number(segments[3]);
+
+                await dataService.updateCat(catId, catDataResult)
+            }
+
 
             res.writeHead(302, {
                 "location": "/"
@@ -29,7 +37,7 @@ const server = http.createServer(async (req, res) => {
 
         return;
     }
-    
+
     if (req.url === "/content/styles/site.css") {
         contentType = "text/css"
 
@@ -47,18 +55,26 @@ const server = http.createServer(async (req, res) => {
         "content-type": contentType
     })
 
-
-    switch (req.url) {
-        case "/":
-            res.write(await homeView());
-            break;
-        case "/cats/add-cat":
-            res.write(await addCatView());
-            break;
-        case "/cats/add-breed":
-            res.write(await addBreedView());
-            break;
+    if (req.url === "/" && req.method === "GET") {
+        res.write(await homeView());
     }
+
+    if (req.url === "/cats/add-cat" && req.method === "GET") {
+        res.write(await addCatView());
+    }
+
+    if (req.url === "/cats/add-breed" && req.method === "GET") {
+        res.write(await addBreedView());
+    }
+
+    if (req.url.startsWith("/cats/edit-cat/") && req.method === "GET") {
+        const segments = req.url.split("/");
+        const catId = Number(segments[3]);
+
+
+        res.write(await editCatView(catId));
+    }
+
 
     res.end();
 })
@@ -68,7 +84,7 @@ async function read(path) {
 }
 
 async function homeView() {
-    
+
     let catsHtml = ""
 
     const cats = await dataService.getCats();
@@ -94,6 +110,17 @@ function addBreedView() {
     return read("./src/views/addBreed.html");
 }
 
+async function editCatView(catId) {
+    const cat = await dataService.getCatById(catId);
+    let html = await read("./src/views/editCat.html");
+
+    html = html.replaceAll("{{name}}", cat.name);
+    html = html.replaceAll("{{description}}", cat.description);
+    html = html.replaceAll("{{imageUrl}}", cat.imageUrl);
+
+    return html;
+}
+
 function css() {
     return read("./src/content/styles/site.css");
 }
@@ -107,7 +134,7 @@ function catTemplate(cat) {
         <p><span>Breed: </span>${cat.breed}</p>
         <p><span>Description: </span>${cat.description}</p>
         <ul class="buttons">
-            <li class="btn edit"><a href="">Change Info</a></li>
+            <li class="btn edit"><a href="/cats/edit-cat/${cat.id}">Change Info</a></li>
             <li class="btn delete"><a href="">New Home</a></li>
         </ul>
     </li>
