@@ -8,7 +8,8 @@ function getCats() {
 }
 
 async function addCat(newCat) {
-    newCat.id = data.cats.length + 1;
+    newCat.id = data.nextId;
+    data.nextId++;
     data.cats.push(newCat);
     
     await saveData();
@@ -32,9 +33,14 @@ async function getBreeds() {
 
 async function addBreed(newBreed) {
     data.breeds.push(newBreed);
-    const dataStringified = JSON.stringify(data);
 
     await saveData();
+}
+
+async function deleteCat(catId) {
+    data.cats = data.cats.filter((cat) => cat.id !== catId);
+
+    saveData();
 }
 
 
@@ -51,5 +57,6 @@ export const dataService = {
     addCat,
     getBreeds,
     addBreed,
+    deleteCat,
     updateCat
 }

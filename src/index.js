@@ -30,6 +30,11 @@ const server = http.createServer(async (req, res) => {
                 const newBreed = newBreedData.get("breed");
 
                 dataService.addBreed(newBreed);
+            } else if (req.url.startsWith("/cats/details/")) {
+                const segments = req.url.split("/");
+                const catId = Number(segments[3]);
+
+                await dataService.deleteCat(catId);
             }
 
 
@@ -80,7 +85,7 @@ const server = http.createServer(async (req, res) => {
         res.write(await editCatView(catId));
     }
 
-    if (req.url.startsWith("/cats/detail/") && req.method === "GET") {
+    if (req.url.startsWith("/cats/details/") && req.method === "GET") {
         const segments = req.url.split("/");
         const catId = Number(segments[3]);
 
@@ -146,12 +151,16 @@ async function editCatView(catId) {
 
 async function detailCatView(catId) {
     const cat = await dataService.getCatById(catId);
-    let html = read("./src/views/catShelter.html")
+    let html = await read("./src/views/catShelter.html")
 
-    html = (await html).replaceAll("{{imageUrl}}", cat.imageUrl);
-    html = (await html).replaceAll("{{name}}", cat.name);
-    html = (await html).replaceAll("{{description}}", cat.description);
-    html = (await html).replaceAll("{{breed}}", cat.breed);
+    if (cat.imageUrl) {
+    html = html.replaceAll("{{imageUrl}}", cat.imageUrl);
+    } else {
+        html = html.replaceAll("{{imageUrl}}", cat.imageURL);
+    }
+    html = html.replaceAll("{{name}}", cat.name);
+    html = html.replaceAll("{{description}}", cat.description);
+    html = html.replaceAll("{{breed}}", cat.breed);
 
     return html;
 }
@@ -170,7 +179,7 @@ function catTemplate(cat) {
         <p><span>Description: </span>${cat.description}</p>
         <ul class="buttons">
             <li class="btn edit"><a href="/cats/edit-cat/${cat.id}">Change Info</a></li>
-            <li class="btn delete"><a href="/cats/detail/${cat.id}">New Home</a></li>
+            <li class="btn delete"><a href="/cats/details/${cat.id}">New Home</a></li>
         </ul>
     </li>
     `
