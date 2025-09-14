@@ -25,6 +25,11 @@ const server = http.createServer(async (req, res) => {
                 const catId = Number(segments[3]);
 
                 await dataService.updateCat(catId, catDataResult)
+            } else if (req.url === "/cats/add-breed") {
+                const newBreedData = new URLSearchParams(urlData);
+                const newBreed = newBreedData.get("breed");
+
+                dataService.addBreed(newBreed);
             }
 
 

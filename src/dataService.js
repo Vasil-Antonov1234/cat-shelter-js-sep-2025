@@ -22,7 +22,19 @@ async function getCatById(catId) {
 async function updateCat(catId, catData) {
     data.cats = data.cats.map((cat) => cat.id === catId ? {id: catId, ...catData} : cat);
     
-    await saveData()
+    await saveData();
+}
+
+
+async function getBreeds() {
+    return data.breeds;
+}
+
+async function addBreed(newBreed) {
+    data.breeds.push(newBreed);
+    const dataStringified = JSON.stringify(data);
+
+    await saveData();
 }
 
 
@@ -33,16 +45,11 @@ async function saveData() {
 }
 
 
-
-async function getBreeds() {
-    return data.breeds;
-}
-
-
 export const dataService = {
     getCats,
     getCatById,
     addCat,
     getBreeds,
+    addBreed,
     updateCat
 }
