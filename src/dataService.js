@@ -25,16 +25,24 @@ async function updateCat(catId, catData) {
     await saveData()
 }
 
-export const dataService = {
-    getCats,
-    getCatById,
-    addCat,
-    updateCat
-}
-
 
 async function saveData() {
     const dataStringified = JSON.stringify(data, null, 2);
     
     await fs.writeFile("./src/data.json", dataStringified, { encoding: "utf-8" });
+}
+
+
+
+async function getBreeds() {
+    return data.breeds;
+}
+
+
+export const dataService = {
+    getCats,
+    getCatById,
+    addCat,
+    getBreeds,
+    updateCat
 }

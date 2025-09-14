@@ -102,8 +102,14 @@ async function homeView() {
     return result;
 }
 
-function addCatView() {
-    return read("./src/views/addCat.html");
+async function addCatView() {
+    const breeds = await dataService.getBreeds();
+    
+    const html = await read("./src/views/addCat.html");
+    const breedHtml = breeds.map((breed) => breedTemplate(breed)).join("\n");
+
+    const result = html.replaceAll("{{breeds}}", breedHtml);
+    return result;
 }
 
 function addBreedView() {
@@ -138,6 +144,12 @@ function catTemplate(cat) {
             <li class="btn delete"><a href="">New Home</a></li>
         </ul>
     </li>
+    `
+}
+
+function breedTemplate(breed) {
+    return `
+        <option value="${breed}">${breed}</option>
     `
 }
 

@@ -36,19 +36,24 @@
       "id": 5
     },
     {
+      "id": 6,
       "name": "Pesho",
       "description": "The American Bobtail bears a distinct resemblance to a bobtailed wildcat. From her markings and alert, hunter’s gaze to her short, expressive tail, her appearance suggests a scaled-down version of that wild cat.",
-      "imageURL": "https://as2.ftcdn.net/v2/jpg/02/66/72/41/1000_F_266724172_Iy8gdKgMa7XmrhYYxLCxyhx6J7070Pr8.jpg",
-      "breed": "Fluffy Cat",
-      "id": 6
+      "imageUrl": "https://images.all-free-download.com/images/thumbjpg/cat_hangover_relax_213869.jpg",
+      "breed": "Fluffy Cat"
     },
     {
       "id": 7,
-      "name": "Test",
-      "description": "1",
-      "imageUrl": "undefined",
+      "name": "Speedo",
+      "description": "As a working cat, American Shorthairs have a stocky, muscular build. Their muscular legs lend themselves to the American’s agility and endurance. They have a large head and full face, medium-sized ears and large, wide eyes.",
+      "imageUrl": "https://t4.ftcdn.net/jpg/02/66/72/41/360_F_266724172_Iy8gdKgMa7XmrhYYxLCxyhx6J7070Pr8.jpg",
       "breed": "Fluffy Cat"
     }
   ],
-  "breeds": []
+  "breeds": [
+    "Bombay Cat",
+    "Persian Cat",
+    "Siamese Cat",
+    "Fluffy Cat"
+  ]
 }
