@@ -80,6 +80,13 @@ const server = http.createServer(async (req, res) => {
         res.write(await editCatView(catId));
     }
 
+    if (req.url.startsWith("/cats/detail/") && req.method === "GET") {
+        const segments = req.url.split("/");
+        const catId = Number(segments[3]);
+
+        res.write(await detailCatView(catId));
+    }
+
 
     res.end();
 })
@@ -137,6 +144,18 @@ async function editCatView(catId) {
     return html;
 }
 
+async function detailCatView(catId) {
+    const cat = await dataService.getCatById(catId);
+    let html = read("./src/views/catShelter.html")
+
+    html = (await html).replaceAll("{{imageUrl}}", cat.imageUrl);
+    html = (await html).replaceAll("{{name}}", cat.name);
+    html = (await html).replaceAll("{{description}}", cat.description);
+    html = (await html).replaceAll("{{breed}}", cat.breed);
+
+    return html;
+}
+
 function css() {
     return read("./src/content/styles/site.css");
 }
@@ -151,7 +170,7 @@ function catTemplate(cat) {
         <p><span>Description: </span>${cat.description}</p>
         <ul class="buttons">
             <li class="btn edit"><a href="/cats/edit-cat/${cat.id}">Change Info</a></li>
-            <li class="btn delete"><a href="">New Home</a></li>
+            <li class="btn delete"><a href="/cats/detail/${cat.id}">New Home</a></li>
         </ul>
     </li>
     `
