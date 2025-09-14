@@ -92,6 +92,17 @@ const server = http.createServer(async (req, res) => {
         res.write(await detailCatView(catId));
     }
 
+    if (req.url.startsWith("/search") && req.method === "GET") {
+
+        // const searchData = new URLSearchParams(urlData);
+        // const searchDataResult = searchData.get("input");
+        const segments = req.url.split("=");
+        const searchParams = segments[1]; 
+
+
+        res.write(homeView(searchParams));
+    }
+
 
     res.end();
 })
@@ -100,17 +111,22 @@ async function read(path) {
     return await fs.readFile(path, { encoding: "utf-8" });
 }
 
-async function homeView() {
+async function homeView(searchParams) {
 
     let catsHtml = ""
+    let cats;
 
-    const cats = await dataService.getCats();
-    // const cats = [];
+    if (searchParams) {
+        cats = await dataService.searchCat(searchParams)
+    } else {
+        cats = await dataService.getCats();
+        // cats = [];   
+    }
 
     if (cats.length > 0) {
         catsHtml = cats.map((cat) => catTemplate(cat)).join("\n");
     } else {
-        catsHtml = "<h1>There are no cats yet</h1>";
+        catsHtml = "<h1>There are no cats found</h1>";
     }
 
     const html = await read("./src/views/home.html");
@@ -121,7 +137,7 @@ async function homeView() {
 
 async function addCatView() {
     const breeds = await dataService.getBreeds();
-    
+
     const html = await read("./src/views/addCat.html");
     const breedHtml = breeds.map((breed) => breedTemplate(breed)).join("\n");
 
@@ -154,7 +170,7 @@ async function detailCatView(catId) {
     let html = await read("./src/views/catShelter.html")
 
     if (cat.imageUrl) {
-    html = html.replaceAll("{{imageUrl}}", cat.imageUrl);
+        html = html.replaceAll("{{imageUrl}}", cat.imageUrl);
     } else {
         html = html.replaceAll("{{imageUrl}}", cat.imageURL);
     }

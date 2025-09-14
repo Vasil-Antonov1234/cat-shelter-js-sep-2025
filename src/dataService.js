@@ -50,6 +50,13 @@ async function saveData() {
     await fs.writeFile("./src/data.json", dataStringified, { encoding: "utf-8" });
 }
 
+async function searchCat(searchParams) {
+    const result = data.cats.filter((cat) => cat.name.toLowerCase().includes(searchParams.toLowerCase()));
+
+
+    return result;
+}
+
 
 export const dataService = {
     getCats,
@@ -58,5 +65,6 @@ export const dataService = {
     getBreeds,
     addBreed,
     deleteCat,
+    searchCat,
     updateCat
 }
